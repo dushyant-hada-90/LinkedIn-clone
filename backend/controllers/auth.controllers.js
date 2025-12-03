@@ -10,7 +10,7 @@ export const signup = async (req,res)=>{
         if (existEmail){
             return res.status(400).json({message:"email already exists !"})
         }
-        let existUsername = await User.findOne({email}) 
+        let existUsername = await User.findOne({userName}) 
         if (existUsername){
             return res.status(400).json({message:"username already exists !"})
         }
@@ -41,9 +41,9 @@ export const signup = async (req,res)=>{
             secure : process.env.NODE_ENVIRONMENT==="production"
         })
         // return response
-        return res.status(201).json(user)
+        return res.status(201).json({user,message:"Signed up Successfully"})
     } catch (error) {
-        return res.status(500).json({message:error})
+        return res.status(500).json({error,message:"something went wrong"})
     }
 }
 
