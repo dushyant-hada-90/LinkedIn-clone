@@ -12,8 +12,8 @@ function Login() {
   let navigate = useNavigate()
   let {serverUrl} = useContext(authDataContext)
   let {userData,setUserData} = useContext (userDataContext)
-  let [email,setEmail] = useState("")
-  let [password,setPassword] = useState("")
+  let [email,setEmail] = useState("dushyanthada90@gmail.com") //for dev only
+  let [password,setPassword] = useState("12345678") //for dev only
   let [loading,setLoading] = useState(false)
   let [message,setMessage] = useState("")
   let [status, setStatus] = useState(""); // "error" | "success"
@@ -50,6 +50,7 @@ function Login() {
     }
   }
   return (
+    
     <div className='w-full h-screen bg-white flex flex-col items-center justify-start gap-[10px]'>
 
         <div className='p-[30px] lg:p-[35px] w-full h-[80px] flex items-center'>

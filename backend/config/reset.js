@@ -9,7 +9,6 @@ dotenv.config();
 const connectDb = async (mongoUrl) => {
 	if (!mongoUrl) throw new Error("MONGODB_URL is not defined");
 	try {
-		// removed deprecated options that newer mongodb drivers reject
 		await mongoose.connect(mongoUrl);
 		console.log("DB connected");
 	} catch (err) {
@@ -18,13 +17,18 @@ const connectDb = async (mongoUrl) => {
 	}
 };
 
-// Exported function to delete all User entries (safe for programmatic use)
+// Exported function to delete all User entries except one
 export async function deleteAllUsers(mongoUrl = process.env.MONGODB_URL) {
 	if (!mongoUrl) throw new Error("MONGODB_URL is not defined");
 	let result;
 	try {
 		await connectDb(mongoUrl);
-		result = await User.deleteMany({});
+
+		// ❗ Delete all users EXCEPT the allowed one
+		result = await User.deleteMany({
+			userName: { $ne: "dushyanthada90@gmail.com" }
+		});
+
 		console.log(`Deleted ${result.deletedCount} users`);
 		return result;
 	} catch (error) {
@@ -33,9 +37,7 @@ export async function deleteAllUsers(mongoUrl = process.env.MONGODB_URL) {
 	} finally {
 		try {
 			await mongoose.connection.close();
-		} catch (e) {
-			// ignore close errors
-		}
+		} catch (e) {}
 	}
 }
 
