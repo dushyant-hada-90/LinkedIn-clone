@@ -1,6 +1,8 @@
 import React, { createContext } from 'react'
 
-const serverUrl = "http://localhost:8000"
+
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+
 
 export const authDataContext = createContext()
 let value = {

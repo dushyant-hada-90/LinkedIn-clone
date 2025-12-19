@@ -13,7 +13,7 @@ import noProfile from "../assets/noProfile.svg";
 import { io } from "socket.io-client"
 import ConnectionButton from './ConnectionButton';
 
-let socket = io("http://localhost:8000")
+const socket = io(import.meta.env.VITE_SERVER_URL);
 function Post({ index, id, author, like, comment, description, image, createdAt }) {
   let [more, setMore] = useState(false)
   let { serverUrl } = useContext(authDataContext)

@@ -7,6 +7,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { RxCrossCircled } from "react-icons/rx";
 import dp from "../assets/noProfile.svg"
 import { userDataContext } from '../context/UserContext';
+
 function Network() {
   let { serverUrl } = useContext(authDataContext)
   let [connections, setConnections] = useState([])
