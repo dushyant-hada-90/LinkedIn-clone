@@ -131,8 +131,8 @@ function Home() {
           <button className='w-[80%] h-[60%] border-2 border-gray-500 rounded-full flex items-center justify-start px-[20px] cursor-pointer hover:bg-gray-200' onClick={() => { setUploadPost(true); setDescription(""); setPostingStatus(false) }}>start a post</button>
         </div>
         {postData.map((post, index) => (
-          <Post key={index} id={post._id} description={post.description} author={post.author} image={post.image} like={post.like} 
-          comment={post.comment} />
+          <Post key={index} index={index} id={post._id} description={post.description} author={post.author} image={post.image} like={post.like} 
+          comment={post.comment} createdAt={post.createdAt} />
         ))}
       </div>
 

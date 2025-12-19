@@ -17,7 +17,7 @@ function EditProfile() {
     let [headline, setHeadline] = useState(userData.headline || "")
     let [location, setLocation] = useState(userData.location || "")
     let [gender, setGender] = useState(userData.gender || "")
-    let [skills, setSkills] = useState(["skill1", "skill2"] || ["skill1", "skill2"])
+    let [skills, setSkills] = useState(userData.skills || ["skill1", "skill2"])
     let [newSkills, setNewSkills] = useState("")
     let [education, setEducation] = useState(userData.education || [])
     let [newEducation, setNewEducation] = useState({
