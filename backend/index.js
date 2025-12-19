@@ -12,11 +12,12 @@ import { Server } from "socket.io";
 
 dotenv.config()
 let port = process.env.PORT || 5000
+let FRONTEND_URL = process.env.FRONTEND_URL
 let app = express()
 let server = http.createServer(app)
 export const io = new Server(server, {
     cors: ({
-        origin: "http://localhost:5173",
+        origin: FRONTEND_URL,
         credentials: true
     })
 })
@@ -26,7 +27,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: FRONTEND_URL,
     credentials: true
 }))
 
