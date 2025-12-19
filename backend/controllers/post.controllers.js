@@ -4,7 +4,7 @@ import { io } from "../index.js"
 
 export const createPost = async (req, res) => {
     try {
-        console.log(req.file);
+        // console.log(req.file);
         let { description } = req.body
         let newPost
         if (req.file) {
