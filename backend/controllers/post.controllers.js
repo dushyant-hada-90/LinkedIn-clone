@@ -60,7 +60,7 @@ export const getPost = async (req, res) => {
 
         const lastPost = posts[posts.length - 1];
 
-        const nextCursor = lastPost
+        const nextCursor = hasMore && lastPost
             ? {
                 createdAt: lastPost.createdAt,
                 _id: lastPost._id

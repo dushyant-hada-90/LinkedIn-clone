@@ -22,17 +22,7 @@ function UserContext({children}) {
     }
   },[serverUrl])
   
-  // const getPost = async ()=> {
-  //   try {
-  //     let result = await axios.get(serverUrl+"/api/post/getpost",{withCredentials:true})
-  //     // console.log(result.data.post)
-  //     setPostData(result.data.post)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
- // UserContext
-
+ 
  useEffect(() => {
   
   getCurrentUser();
