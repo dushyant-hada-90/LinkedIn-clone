@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { authDataContext } from "../context/AuthContext";
 import { userDataContext } from "../context/UserContext";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
@@ -17,10 +17,13 @@ export default function Feed() {
     hasMore,
     error,
     setError,
+    onPostDelete,
+    onPostUpdate
   } = useInfinitePosts(serverUrl);
 
 
 
+  // handle online,offline user
   useEffect(() => {
     console.log("useEffect called ,error->", error)
     const handleOnline = () => {
@@ -63,10 +66,15 @@ export default function Feed() {
   }, [userData]); // ❗ intentionally NOT adding fetchPosts
 
 
+
   return (
     <div className="space-y-4">
       {posts.map(post => (
-        <Post key={post._id} post={post} />
+        <Post
+          key={post._id}
+          post={post}
+          onPostUpdate={onPostUpdate}
+          onPostDelete={onPostDelete} />
       ))}
 
       {/*Change: Sentinel tabhi dikhao jab error NA ho */}

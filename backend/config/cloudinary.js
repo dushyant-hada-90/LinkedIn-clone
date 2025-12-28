@@ -19,13 +19,36 @@ const uploadOnCloudinary = async (filePath)=>{
         });
         // delete from multer
         fs.unlinkSync(filePath)
-        return uploadResult.secure_url
+        return uploadResult
         
-        console.log(uploadResult);
+        // console.log(uploadResult);
     } catch (error) {
         fs.unlinkSync(filePath)
         console.log(error);
     }
 }
 
-export default uploadOnCloudinary;
+
+const deleteFromCloudinary = async (publicId) => {
+    // Configuration
+    cloudinary.config({ 
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+        api_key: process.env.CLOUDINARY_API_KEY, 
+        api_secret: process.env.CLOUDINARY_API_SECRET
+    });
+
+    try {
+        if (!publicId) return null;
+
+        // Use the uploader.destroy method
+        const response = await cloudinary.uploader.destroy(publicId);
+        
+        console.log("Deleted from Cloudinary:", response);
+        return response;
+    } catch (error) {
+        console.error("Cloudinary Delete Error:", error);
+        return null;
+    }
+};
+
+export { deleteFromCloudinary,uploadOnCloudinary };

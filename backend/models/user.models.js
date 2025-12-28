@@ -72,7 +72,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique: true,
         sparse: true
-    }
+    },
+    postCount: { type: Number, default: 0 }, // Industry standard: "Counter Cache"
 
 }, { timestamps: true })
 

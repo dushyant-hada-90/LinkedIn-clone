@@ -101,6 +101,7 @@ export const getConnectionStatus = async (req, res) => {
     try {
         const targetUserId = req.params.userId
         const currentUserId = req.userId
+        console.log(targetUserId,req.params ,currentUserId)
 
         let currentUser = await User.findById(currentUserId)
         if (currentUser.connection.includes(targetUserId)) {

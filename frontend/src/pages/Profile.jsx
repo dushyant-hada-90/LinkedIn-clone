@@ -9,11 +9,13 @@ import { userDataContext } from '../context/UserContext'
 import { authDataContext } from '../context/AuthContext'
 import axios from 'axios'
 import EditProfile from '../components/EditProfile'
+import { useInfinitePosts } from "../hooks/useInfinitePosts";
 
 function Profile() {
     let { userData, setUserData, edit, setEdit, postData, setPostData } = useContext(userDataContext)
     let { serverUrl } = useContext(authDataContext)
     let [userConnection,setUserConnection] = useState([])
+    let {posts} = useInfinitePosts(serverUrl)
 
     const handleGetUserConnection = async ()=>{
         try {
@@ -31,10 +33,10 @@ function Profile() {
         handleGetUserConnection()
     },[])
     return (
-        <div className='w-full min-h-[100vh] bg-[#f0efe7] flex flex-col items-center pt-[100px]'>
+        <div className='w-full min-h-[100vh] bg-[#f0efe7] flex flex-col items-center pt-[100px] '>
             <Nav />
             {edit && <EditProfile/>}
-            <div className='w-full max-w-[900px] min-h-[100vh]'>
+            <div className='w-full max-w-[900px] min-h-[100vh] flex flex-col gap-[10px]'>
 
                 <div className='relative bg-[white] pb-[40px] rounded shadow-lg'>
                     <div className='w-full h-[100px] bg-gray-400 rounded overflow-hidden flex items-center justify-center  relative cursor-pointer' onClick={() => setEdit(true)}>
@@ -59,6 +61,7 @@ function Profile() {
                     </button>
 
                 </div>
+                <div className='w-full h-[100px] flex items-center p-[20px] text-[22px] text-gray-600 font-semibold bg-white shadow-lg rounded-lg'>{`Posts (${posts.length})`}</div>
             </div>
         </div>
     )

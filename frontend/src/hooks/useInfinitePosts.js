@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useCallback, useRef, useState } from "react";
 import toast from "react-hot-toast";
+
+
 export function useInfinitePosts(serverUrl) {
     const [posts, setPosts] = useState([])
     const [cursor, setCursor] = useState(null)
     const [loading, setLoading] = useState(false)
     const [hasMore, setHasMore] = useState(true)
-    const [error,setError] = useState(false)
+    const [error, setError] = useState(false)
     // Internal Guard: Yeh render cycle se tez hai
     const isFetching = useRef(false);
 
@@ -41,14 +43,26 @@ export function useInfinitePosts(serverUrl) {
             } catch (err) {
                 console.error("Fetch failed:", err);
                 setError(true);
-                toast.error("Failed to load more posts. Server might be down.",{ id: "api-error" });
+                toast.error("Failed to load more posts. Server might be down.", { id: "api-error" });
             } finally {
                 // Step 3: Unlock and Hide Spinner
                 isFetching.current = false;
                 setLoading(false);
             }
         },
-        [serverUrl, cursor, hasMore, loading,error],
+        [serverUrl, cursor, hasMore, loading, error],
     )
-    return { posts, fetchPosts, loading, hasMore,error,setError };
+
+    // Function to update a single post in the list
+    const onPostUpdate = (updatedPost) => {
+        console.log("onPostUpdate called",updatedPost)
+        console.log("existing posts->",posts)
+        setPosts(prev =>prev.map(p => p._id === updatedPost._id ? updatedPost : p));
+    };
+
+    // Function to remove a post from the list
+    const onPostDelete = (postId) => {
+        setPosts(prev => prev.filter(p => p._id !== postId));
+    };
+    return { posts, fetchPosts,onPostUpdate,onPostDelete, loading, hasMore, error, setError };
 }

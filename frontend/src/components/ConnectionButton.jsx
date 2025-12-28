@@ -6,15 +6,16 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 
-const socket = io(import.meta.env.VITE_SERVER_URL);
+// const socket = io(import.meta.env.VITE_SERVER_URL);
 
 
-function ConnectionButton({userId}) {
+function ConnectionButton({userId,status}) {
     // console.log(userId)
+    if(!userId){return}
     let { serverUrl } = useContext(authDataContext)
     let { userData, setUserData } = useContext(userDataContext)
-    let [status, setStatus] = useState("Connect")
     let navigate = useNavigate()
+    
     const handleSendConnection = async () => {
         try {
             let result = await axios.post(`${serverUrl}/api/connection/send/${userId}`, {}, { withCredentials: true })
@@ -33,27 +34,27 @@ function ConnectionButton({userId}) {
         }
     }
 
-    const handleGetStatus = async () => {
-        try {
-            let result = await axios.get(`${serverUrl}/api/connection/getstatus/${userId}`, { withCredentials: true })
-            // console.log(result);
-            setStatus(result.data.status)
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    // const handleGetStatus = async () => {
+    //     try {
+    //         let result = await axios.get(`${serverUrl}/api/connection/getstatus/${userId}`, { withCredentials: true })
+    //         // console.log(result);
+    //         setStatus(result.data.status)
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
-    useEffect(() => {
-        socket.emit("register", userData._id)
-        handleGetStatus()
+    // useEffect(() => {
+    //     socket.emit("register", userData._id)
+    //     handleGetStatus()
 
-        socket.on("statusUpdated", ({ updatedUserId, newStatus }) => {
-            // console.log(updatedUserId, newStatus)
-            if (updatedUserId == userId) {
-                setStatus(newStatus)
-            }
-        })
-    }, [userId])
+    //     socket.on("statusUpdated", ({ updatedUserId, newStatus }) => {
+    //         // console.log(updatedUserId, newStatus)
+    //         if (updatedUserId == userId) {
+    //             setStatus(newStatus)
+    //         }
+    //     })
+    // }, [userId])
 
     const handleClick = async ()=>{
         if (status=="disconnect"){
