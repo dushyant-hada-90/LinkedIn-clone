@@ -62,88 +62,249 @@ function Home() {
   }
 
   return (
-    // <div className='w-full min-h-[100vh]  bg-[#f0efe7] pt-[100px] flex justify-center gap-[20px] items-center lg:items-start px-[20px] flex-col md:flex-row relative pb-[50px]'>
-    <div className="w-full min-h-screen bg-[#f0efe7] pt-[100px] pb-[50px]">
-      <div className="max-w-7xl mx-auto px-5 flex gap-5 flex-col md:flex-row items-center lg:items-start relative">
+    <div className='w-full min-h-screen bg-[#f3f2ef] font-sans pb-10'>
+      
+      {edit && <EditProfile />}
+      <Nav />
 
+      {/* --- Main Layout Grid --- */}
+      {/* Added pt-[75px] to clear the fixed Nav (approx 60px) + 15px gap */}
+      <div className='max-w-[1128px] mx-auto px-2 md:px-4 pt-[15px] grid grid-cols-1 md:grid-cols-12 gap-5'>
 
+        {/* --- LEFT SIDEBAR (Profile) --- */}
+        {/* Mobile: Full Width, Tablet: 4 cols, Desktop: 3 cols */}
+        <div className='md:col-span-4 lg:col-span-3 flex flex-col gap-2'>
+          <div className='bg-white shadow-sm border border-gray-300 rounded-lg overflow-hidden relative'>
+            
+            {/* Banner Image */}
+            <div
+              className='w-full h-[60px] bg-[#a0b4b7] relative cursor-pointer hover:opacity-90 transition-opacity'
+              onClick={() => setEdit(true)}
+            >
+              {userData.coverImage &&
+                <img src={userData.coverImage || null} alt="cover" className='w-full h-full object-cover' />}
+              {/* Optional Camera Icon for Owner */}
+              {/* <div className='absolute top-2 right-2 p-1.5 bg-white rounded-full shadow-sm text-[#0a66c2]'>
+                <MdOutlineCameraAlt className='w-4 h-4' />
+              </div> */}
+            </div>
 
-        {edit && <EditProfile />}
-        <Nav />
+            {/* Profile Picture Area */}
+            <div className='relative px-4 pb-4 text-center border-b border-gray-200'>
+              <div
+                className='relative -mt-[38px] mx-auto w-[72px] h-[72px] bg-white rounded-full p-0.5 cursor-pointer'
+                onClick={() => setEdit(true)}
+              >
+                <img
+                  src={userData.profileImage || noProfile}
+                  alt="dp"
+                  className='w-full h-full rounded-full object-cover border-2 border-white box-content'
+                />
+              </div>
 
+              {/* User Info */}
+              <div className='mt-3 cursor-pointer hover:underline decoration-1' onClick={() => setEdit(true)}>
+                <div className='text-[16px] font-semibold text-gray-900 leading-tight'>
+                  {`${userData.firstName} ${userData.lastName}`}
+                </div>
+              </div>
+              <div className='text-[12px] text-gray-500 mt-1 leading-snug line-clamp-2'>
+                {userData.headline || "Add a headline"}
+              </div>
+            </div>
 
-        <div className='w-full lg:w-[25%] min-h-[200px] bg-[white] shadow-lg rounded-lg p-[10px] relative'>
+            {/* Stats / Widget Links */}
+            <div className='py-3'>
+              <div className='px-3 py-1 hover:bg-gray-100 cursor-pointer flex justify-between items-center'>
+                 <div className='text-xs font-semibold text-gray-500'>Who's viewed your profile</div>
+                 <div className='text-xs font-semibold text-[#0a66c2]'>32</div>
+              </div>
+              <div className='px-3 py-1 hover:bg-gray-100 cursor-pointer flex justify-between items-center'>
+                 <div className='text-xs font-semibold text-gray-500'>Connections</div>
+                 <div className='text-xs font-semibold text-[#0a66c2]'>{userData.connections || 150}</div>
+              </div>
+            </div>
 
-          <div className='w-full h-[100px] bg-gray-400 rounded overflow-hidden flex items-center justify-center  relative cursor-pointer' onClick={() => setEdit(true)}>
-            <img src={userData.coverImage || null} alt="" className='w-full' />
-            <MdOutlineCameraAlt className='absolute right-[20px] top-[20px] w-[25px] h-[25px] text-white' />
+            {/* Edit Button (Mobile Only or Bottom Link) */}
+            <div className='border-t border-gray-200 hover:bg-gray-100 transition cursor-pointer p-3 flex items-center gap-2 text-xs font-semibold text-gray-600' onClick={() => setEdit(true)}>
+               <HiPencil /> Edit Profile
+            </div>
           </div>
-
-          <div className='w-[70px] h-[70px] rounded-full overflow-hidden flex items-center justify-center absolute top-[65px] left-[35px] cursor-pointer ' onClick={() => setEdit(true)}>
-            <img src={userData.profileImage || noProfile} alt="dp" className='h-full' />
-          </div>
-          <div className='w-[20px] h-[20px] bg-[#17c1ff] absolute top-[105px] left-[90px] rounded-full flex justify-center items-center  cursor-pointer' onClick={() => setEdit(true)}>
-            <FaPlus className='text-white' />
-          </div>
-          <div className='font-semibold text-gray-700 mt-[30px] pl-[20px]'>
-            <div className='text-[22px]'>{`${userData.firstName} ${userData.lastName}`}</div>
-            <div className='text-[18px] font-semibold text-gray-600'>{`${userData.headline || "sample headline"}`}</div>
-            <div className='text-[16px] text-gray-600'>{userData.location}</div>
-          </div>
-
-          <button className='w-[100%] h-[40px] rounded-full border-2 my-[20px] border-[#2dc0ff] text-[#2dc0ff] cursor-pointer transition duration-200 hover:bg-[#2dc0ff] hover:text-white hover:shadow-md flex justify-center items-center gap-[10px]' onClick={() => setEdit(true)}>Edit Profile <HiPencil />
-          </button>
-
         </div>
 
 
-        {uploadPost &&
-          <div className='w-full h-full bg-black fixed  top-0 z-[100] opacity-[0.6] left-0'></div>}
-        {uploadPost &&
-          <div className="w-[90%] max-w-[500px]  max-h-[85dvh] h-[600px]  bg-white shadow-lg rounded-lg  fixed left-1/2 top-1/2  -translate-x-1/2 -translate-y-1/2  z-[200]  p-[20px]  pb-[env(safe-area-inset-bottom)]  flex flex-col gap-[20px]  overflow-y-auto">
+        {/* --- MIDDLE COLUMN (Feed) --- */}
+        {/* Mobile: Full Width, Tablet: 8 cols, Desktop: 6 cols */}
+        <div className='md:col-span-8 lg:col-span-6 flex flex-col gap-4'>
 
-            {/* cross */}
-            <div className='absolute top-[20px] right-[20px] cursor-pointer' onClick={() => setUploadPost(false)} ><RxCross1 className='w-[25x] h-[25px] text-gray-800 font-bold' /></div>
-            <div className='flex justify-start items-center gap-[10px]'>
-              {/* profile Image */}
-              <div className='w-[70px] h-[70px] rounded-full overflow-hidden flex items-center justify-center cursor-pointer '>
-                <img src={userData.profileImage || noProfile} alt="dp" className='h-full' />
-              </div>
-              <div className='text-[22px]'>{`${userData.firstName} ${userData.lastName}`}</div>
-            </div>
-            <textarea className={`w-full ${frontendImage ? "h-[200px]" : 'h-[550px]'} outline-none border-none p-[10px] resize-none text-[19px]`} placeholder='What do you wanna talk about ?' value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
-            <input type="file" ref={image} hidden onChange={handleImage} />
-            <div className='w-full h-[300px] overflow-hidden flex justify-center items-center'>
-              <img src={frontendImage || null} alt="" className='h-full rounded-lg' />
-            </div>
-            <div className='w-full h-[200px] flex flex-col '>
-              <div className='p-[20px] flex items-center justify-start border-b-2 border-gray-500'>
-                <BsImage className='w-[24px] h-[24px] text-gray-500' onClick={() => image.current.click()} />
+          {/* Start Post Widget */}
+          <div className='bg-white shadow-sm border border-gray-300 rounded-lg p-3 sm:p-4 flex flex-col gap-2'>
+            <div className='flex gap-3 items-center'>
+              <div className='w-12 h-12 flex-shrink-0 rounded-full overflow-hidden cursor-pointer border border-gray-200'>
+                <img src={userData.profileImage || noProfile} alt="dp" className='w-full h-full object-cover' />
               </div>
 
-              <div className='flex justify-end items-center gap-[10px]'>
-                <Message status={postingStatus} />
-                <button className='w-[100px] h-[50px]  rounded-full border-2 bg-[#24b2ff] text-[white] cursor-pointer transition duration-200  hover:shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed' disabled={postingStatus === "loading"} onClick={handleUploadPost}>Post</button>
+              <button
+                className='flex-grow h-12 border border-gray-400 rounded-full text-left px-5 text-gray-500 font-semibold hover:bg-gray-100 transition duration-200 bg-white text-sm'
+                onClick={() => { setUploadPost(true); setDescription(""); setPostingStatus(false) }}
+              >
+                Start a post
+              </button>
+            </div>
+
+            <div className='flex justify-between items-center pt-1 px-2 sm:px-4'>
+              <div className='flex items-center gap-2 p-2 sm:p-3 hover:bg-gray-100 rounded-md cursor-pointer transition' onClick={() => { setUploadPost(true); }}>
+                <BsImage className='text-[#378fe9] text-lg' />
+                <span className='text-sm font-semibold text-gray-600'>Media</span>
+              </div>
+              {/* Added Dummy Buttons for Visual Completeness */}
+              <div className='hidden sm:flex items-center gap-2 p-3 hover:bg-gray-100 rounded-md cursor-pointer transition'>
+                <span className='text-[#c37d16] font-bold text-lg'>📅</span>
+                <span className='text-sm font-semibold text-gray-600'>Event</span>
+              </div>
+              <div className='hidden sm:flex items-center gap-2 p-3 hover:bg-gray-100 rounded-md cursor-pointer transition'>
+                <span className='text-[#e06847] font-bold text-lg'>📰</span>
+                <span className='text-sm font-semibold text-gray-600'>Article</span>
               </div>
             </div>
           </div>
-        }
 
-        <div className='w-full lg:w-[50%] min-h-[200px] bg-[#f0efe7] flex flex-col gap-[20px]'>
-          <div className='w-full h-[120px] bg-white shadow-lg rounded-lg p-[20px] flex items-center justify-center gap-[10px]'>
-            <div className='w-[70px] h-[70px] rounded-full overflow-hidden   flex items-center justify-center  cursor-pointer'>
-              <img src={userData.profileImage || noProfile} alt="dp" className='h-full' />
-            </div>
-            <button className='w-[80%] h-[60%] border-2 border-gray-500 rounded-full flex items-center justify-start px-[20px] cursor-pointer hover:bg-gray-200' onClick={() => { setUploadPost(true); setDescription(""); setPostingStatus(false) }}>start a post</button>
+          {/* Sort Divider */}
+          <div className='flex items-center gap-1 mb-1'>
+            <div className='h-[1px] bg-gray-300 flex-1'></div>
+            <span className='text-xs text-gray-500'>Sort by: <span className='font-bold text-gray-900 cursor-pointer'>Top</span></span>
           </div>
 
-          <Feed/>
+          {/* Feed Component */}
+          <Feed />
         </div>
 
-        <div className='w-full lg:w-[25%] min-h-[200px] bg-[white] shadow-lg'>
 
+        {/* --- RIGHT COLUMN (Widgets/News) --- */}
+        {/* Hidden on Tablet/Mobile, Visible on Desktop (3 cols) */}
+        <div className='hidden lg:block lg:col-span-3'>
+          <div className='bg-white shadow-sm border border-gray-300 rounded-lg p-4'>
+            <div className='flex justify-between items-center mb-4'>
+              <h2 className='text-[16px] font-semibold text-gray-900'>LinkedIn News</h2>
+              <div className='text-gray-500 cursor-pointer hover:text-gray-700'>
+                 <span className='text-xl'>ⓘ</span>
+              </div>
+            </div>
+            <ul className='space-y-4'>
+              <li className='cursor-pointer group'>
+                <div className='flex items-center gap-2'>
+                   <div className='w-2 h-2 bg-gray-500 rounded-full'></div>
+                   <div className='text-sm font-semibold text-gray-700 line-clamp-1 group-hover:text-[#0a66c2] group-hover:underline'>Top skills in 2025</div>
+                </div>
+                <div className='text-xs text-gray-500 pl-4'>2d ago • 10,934 readers</div>
+              </li>
+              <li className='cursor-pointer group'>
+                 <div className='flex items-center gap-2'>
+                   <div className='w-2 h-2 bg-gray-500 rounded-full'></div>
+                   <div className='text-sm font-semibold text-gray-700 line-clamp-1 group-hover:text-[#0a66c2] group-hover:underline'>Tech hiring stabilizes</div>
+                </div>
+                <div className='text-xs text-gray-500 pl-4'>18h ago • 5,213 readers</div>
+              </li>
+              <li className='cursor-pointer group'>
+                 <div className='flex items-center gap-2'>
+                   <div className='w-2 h-2 bg-gray-500 rounded-full'></div>
+                   <div className='text-sm font-semibold text-gray-700 line-clamp-1 group-hover:text-[#0a66c2] group-hover:underline'>New AI regulations</div>
+                </div>
+                <div className='text-xs text-gray-500 pl-4'>5h ago • 2,099 readers</div>
+              </li>
+            </ul>
+            <button className='mt-4 text-sm text-gray-500 font-semibold flex items-center gap-1 hover:bg-gray-100 px-2 py-1 rounded transition'>
+              Show more <span className='text-lg'>⌄</span>
+            </button>
+          </div>
         </div>
+
       </div>
+
+      {/* --- MODAL (Upload Post) --- */}
+      {/* Increased z-index to 60 to appear above the Navbar (z-50) */}
+      {uploadPost && (
+        <div className='fixed inset-0 z-[60] bg-black/70 flex items-start sm:items-center justify-center p-0 sm:p-4'>
+          <div className="w-full h-full sm:h-auto sm:max-w-[552px] bg-white sm:rounded-xl shadow-xl flex flex-col max-h-screen sm:max-h-[90vh] overflow-hidden animate-fadeIn">
+
+            {/* Modal Header */}
+            <div className='flex justify-between items-center px-6 py-4 border-b border-gray-200'>
+              <h2 className='text-xl font-normal text-gray-700'>Create a post</h2>
+              <button
+                onClick={() => setUploadPost(false)}
+                className='p-2 rounded-full hover:bg-gray-100 text-gray-600 transition'
+              >
+                <RxCross1 size={24} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className='flex-1 overflow-y-auto p-6 scrollbar-hide'>
+              {/* User Identity in Modal */}
+              <div className='flex items-center gap-3 mb-4'>
+                <div className='w-12 h-12 rounded-full overflow-hidden border border-gray-100'>
+                  <img src={userData.profileImage || noProfile} alt="dp" className='w-full h-full object-cover' />
+                </div>
+                <div className='flex flex-col'>
+                  <span className='font-semibold text-gray-800 text-lg'>
+                    {`${userData.firstName} ${userData.lastName}`}
+                  </span>
+                  <button className='text-sm text-gray-500 border border-gray-500 px-3 py-1 rounded-full w-fit font-semibold hover:bg-gray-100 transition flex items-center gap-1'>
+                    Anyone <span>▼</span>
+                  </button>
+                </div>
+              </div>
+
+              <textarea
+                className={`w-full ${frontendImage ? "h-[100px]" : 'h-[200px]'} outline-none border-none text-lg text-gray-800 placeholder:text-gray-500 resize-none`}
+                placeholder='What do you want to talk about?'
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                autoFocus
+              />
+
+              {/* Image Preview */}
+              {frontendImage && (
+                <div className='w-full mt-2 rounded-lg overflow-hidden border border-gray-200 relative bg-gray-50'>
+                  <button onClick={() => { setFrontendImage(""); setBackendImage("") }} className='absolute top-2 right-2 bg-gray-800/80 text-white p-1 rounded-full hover:bg-black transition'><RxCross1 /></button>
+                  <img src={frontendImage} alt="preview" className='w-full object-contain max-h-[300px]' />
+                </div>
+              )}
+
+              <input type="file" ref={image} hidden onChange={handleImage} />
+            </div>
+
+            {/* Modal Footer */}
+            <div className='px-6 py-4 flex items-center justify-between border-t border-gray-100'>
+              <div className='flex items-center gap-2'>
+                <button
+                  className='p-2 hover:bg-gray-100 rounded-full text-gray-600 transition'
+                  title="Add Media"
+                  onClick={() => image.current.click()}
+                >
+                  <BsImage size={20} />
+                </button>
+                {/* Visual Only Buttons */}
+                <button className='p-2 hover:bg-gray-100 rounded-full text-gray-600 transition hidden sm:block'><span className='font-bold'>📅</span></button>
+                <button className='p-2 hover:bg-gray-100 rounded-full text-gray-600 transition hidden sm:block'><span className='font-bold'>➕</span></button>
+              </div>
+
+              <div className='flex items-center gap-3'>
+                <Message status={postingStatus} />
+                <button
+                  className='px-6 py-1.5 rounded-full bg-[#0a66c2] text-white font-semibold text-sm hover:bg-[#004182] disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+                  disabled={postingStatus === "loading" || (!description && !backendImage)}
+                  onClick={handleUploadPost}
+                >
+                  Post
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
