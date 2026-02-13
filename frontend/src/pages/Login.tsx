@@ -53,9 +53,7 @@ export default function LoginPage() {
         </div>
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-16">
-            <div className="h-12 w-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white font-bold text-2xl">
-              V
-            </div>
+            <img src="/logo.png" alt="Vibe" className="h-12 w-12 rounded-2xl object-cover" />
             <span className="text-3xl font-bold text-white">Vibe</span>
           </div>
           <h1 className="text-5xl font-bold text-white leading-tight mb-6">
@@ -79,9 +77,7 @@ export default function LoginPage() {
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-3 mb-10">
-            <div className="h-10 w-10 rounded-xl bg-linear-to-br from-teal-500 to-emerald-500 flex items-center justify-center text-white font-bold text-lg">
-              V
-            </div>
+            <img src="/logo.png" alt="Vibe" className="h-10 w-10 rounded-xl object-cover" />
             <span className="text-2xl font-bold bg-linear-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">Vibe</span>
           </div>
 

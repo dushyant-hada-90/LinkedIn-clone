@@ -144,9 +144,7 @@ export default function NavBar() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 gap-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-teal-500 to-emerald-500 text-white font-bold text-lg shadow-sm">
-            V
-          </div>
+          <img src="/logo.png" alt="Vibe" className="h-9 w-9 rounded-xl shadow-sm object-cover" />
           <span className="hidden sm:block text-xl font-bold tracking-tight bg-linear-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">
             Vibe
           </span>
