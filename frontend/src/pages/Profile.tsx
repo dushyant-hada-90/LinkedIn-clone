@@ -18,6 +18,7 @@ import { Skeleton } from '../components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from '../components/ui/dialog';
 import PostCard from '../components/feed/PostCard';
+import IcebreakerCard from '../components/IcebreakerCard';
 import type { User, Post, ConnectionStatus } from '../types';
 
 export default function ProfilePage() {
@@ -199,6 +200,11 @@ export default function ProfilePage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Smart Connect – AI Icebreaker */}
+        {!isOwnProfile && id && connStatus === 'connect' && (
+          <IcebreakerCard userId={id} userName={profile.firstName} />
+        )}
 
         {/* Tabs */}
         <Tabs defaultValue="about">

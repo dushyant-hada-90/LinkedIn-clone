@@ -4,6 +4,7 @@ import { UsersModule } from '../users/users.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { ConnectionsController } from './connections.controller';
 import { ConnectionsService } from './connections.service';
+import { ConnectionsAiService } from './connections-ai.service';
 import { Connection, ConnectionSchema } from './schemas/connection.schema';
 
 @Module({
@@ -13,7 +14,7 @@ import { Connection, ConnectionSchema } from './schemas/connection.schema';
     NotificationsModule,
   ],
   controllers: [ConnectionsController],
-  providers: [ConnectionsService],
-  exports: [ConnectionsService],
+  providers: [ConnectionsService, ConnectionsAiService],
+  exports: [ConnectionsService, ConnectionsAiService],
 })
 export class ConnectionsModule {}

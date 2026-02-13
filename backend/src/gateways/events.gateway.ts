@@ -7,9 +7,12 @@ import {
   ConnectedSocket,
   MessageBody,
 } from '@nestjs/websockets';
+import { UseGuards } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { Server, Socket } from 'socket.io';
 import * as cookie from 'cookie';
 import * as jwt from 'jsonwebtoken';
+import { WsThrottlerGuard } from '../common/guards/ws-throttler.guard';
 import { MessagesService } from '../modules/messages/messages.service';
 import { NotificationsService } from '../modules/notifications/notifications.service';
 
@@ -64,6 +67,8 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('send_message')
+  @UseGuards(WsThrottlerGuard)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   async handleSendMessage(
     @ConnectedSocket() client: Socket,
     @MessageBody() data: { receiverId: string; content: string },
@@ -102,6 +107,8 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('typing')
+  @UseGuards(WsThrottlerGuard)
+  @Throttle({ default: { limit: 10, ttl: 10000 } })
   handleTyping(
     @ConnectedSocket() client: Socket,
     @MessageBody() data: { conversationId: string; receiverId: string },

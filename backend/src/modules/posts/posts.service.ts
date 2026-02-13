@@ -66,11 +66,11 @@ export class PostsService {
 
     const enhanced = trimmed.map((post) => ({
       ...post,
-      connectionStatus: this.connectionsService.determineStatus(currentUserId, post.author?._id, connectionMap),
+      connectionStatus: this.connectionsService.determineStatus(currentUserId, String(post.author?._id), connectionMap),
     }));
 
     const last = enhanced[enhanced.length - 1];
-    const nextCursor = hasMore && last ? { createdAt: last.createdAt, _id: last._id } : null;
+    const nextCursor = hasMore && last ? { createdAt: (last as any).createdAt, _id: last._id } : null;
     return { posts: enhanced, nextCursor };
   }
 
@@ -132,7 +132,7 @@ export class PostsService {
       ...populated,
       connectionStatus: this.connectionsService.determineStatus(
         currentUserId,
-        populated?.author?._id,
+        String(populated?.author?._id),
         connectionMap,
       ),
     };

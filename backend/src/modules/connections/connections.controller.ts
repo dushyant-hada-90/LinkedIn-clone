@@ -2,14 +2,18 @@ import { Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/co
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { ConnectionsService } from './connections.service';
+import { ConnectionsAiService } from './connections-ai.service';
 import { EventsGateway } from '../../gateways/events.gateway';
 import { NotificationsService } from '../notifications/notifications.service';
+import { UsersService } from '../users/users.service';
 
 @Controller('connections')
 @UseGuards(JwtAuthGuard)
 export class ConnectionsController {
   constructor(
     private readonly connectionsService: ConnectionsService,
+    private readonly connectionsAi: ConnectionsAiService,
+    private readonly usersService: UsersService,
     private readonly eventsGateway: EventsGateway,
     private readonly notificationsService: NotificationsService,
   ) {}
@@ -73,5 +77,20 @@ export class ConnectionsController {
   @Get('me')
   me(@CurrentUser() user: { userId: string }) {
     return this.connectionsService.myConnections(user.userId);
+  }
+
+  @Get(':userId/icebreaker')
+  async icebreaker(
+    @CurrentUser() user: { userId: string },
+    @Param('userId') targetId: string,
+  ) {
+    const [sender, receiver] = await Promise.all([
+      this.usersService.findById(user.userId),
+      this.usersService.findById(targetId),
+    ]);
+    if (!sender || !receiver) {
+      return { greeting: 'Could not load profiles', options: [], sharedInterests: [] };
+    }
+    return this.connectionsAi.generateIcebreaker(sender, receiver);
   }
 }

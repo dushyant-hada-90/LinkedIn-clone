@@ -60,7 +60,7 @@ export class AuthService {
       headers: { Authorization: `Bearer ${googleToken}` },
     });
 
-    let user = await this.usersService.findByEmail(email);
+    let user: any = await this.usersService.findByEmail(email);
     if (!user) {
       user = await this.usersService.create({
         firstName: profile.given_name,

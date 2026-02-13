@@ -138,6 +138,84 @@ npm run build  # Production build
 - **Typography**: System font stack for performance
 - **Animations**: Fade-in, slide-up, scale-in transitions throughout
 
+## Security Architecture
+
+```mermaid
+sequenceDiagram
+    participant C as Client (React)
+    participant A as API (NestJS)
+    participant G as Gateway (Socket.io)
+    participant DB as MongoDB
+    participant AI as Gemini AI
+    participant CL as Cloudinary
+
+    Note over C, DB: Authentication Flow
+    C->>A: POST /auth/login { email, password }
+    A->>DB: Verify credentials (bcrypt)
+    DB-->>A: User document
+    A->>A: Sign JWT (access + refresh)
+    A-->>C: Set httpOnly cookies + user payload
+
+    Note over C, A: Authenticated API Requests
+    C->>A: GET /posts (Cookie: access_token)
+    A->>A: JwtAuthGuard extracts & verifies token
+    A->>A: @CurrentUser() decorator injects userId
+    A->>DB: Query with userId context
+    DB-->>A: Results
+    A-->>C: JSON response
+
+    Note over C, A: Token Refresh
+    C->>A: POST /auth/refresh (Cookie: refresh_token)
+    A->>A: Verify refresh token
+    A-->>C: New access_token cookie
+
+    Note over C, G: WebSocket Connection
+    C->>G: ws:// upgrade (Cookie: access_token)
+    G->>G: Parse cookie → verify JWT
+    alt Valid Token
+        G->>G: Map userId → socket.id
+        G-->>C: Connection established
+    else Invalid / Missing
+        G-->>C: Disconnect
+    end
+
+    Note over C, G: Real-Time Messaging (Rate Limited)
+    C->>G: send_message { receiverId, content }
+    G->>G: WsThrottlerGuard (30 req / 60s)
+    G->>DB: Save message + update conversation
+    G-->>C: message_sent confirmation
+    G->>G: Emit to receiver's room
+
+    Note over C, AI: Smart Connect (AI Icebreaker)
+    C->>A: GET /connections/:userId/icebreaker
+    A->>DB: Load sender + receiver profiles
+    A->>AI: Gemini 2.0 Flash (structured JSON)
+    AI-->>A: { greeting, options[], sharedInterests[] }
+    A->>A: Validate with Zod schema
+    A-->>C: Icebreaker suggestions
+
+    Note over C, CL: Image Upload
+    C->>A: POST /posts (multipart/form-data)
+    A->>A: Multer middleware saves to tmp/
+    A->>CL: Upload image buffer
+    CL-->>A: { url, publicId }
+    A->>DB: Save post with image URL
+    A-->>C: Created post
+```
+
+### Key Security Features
+
+| Layer | Mechanism | Details |
+|-------|-----------|---------|
+| **Auth** | JWT httpOnly cookies | Access (15m) + Refresh (7d) tokens |
+| **Passwords** | bcryptjs | Salted hashing, never stored in plain text |
+| **API** | `@UseGuards(JwtAuthGuard)` | All protected routes require valid JWT |
+| **WebSocket** | Cookie-based JWT verification | On connection, not per-message |
+| **Rate Limiting** | `@nestjs/throttler` | HTTP: 5/1s, 30/10s, 100/60s; WS: per-handler |
+| **Validation** | `class-validator` + Zod | DTOs whitelist & strip unknown fields |
+| **CORS** | Origin-locked | Only `FRONTEND_URL` allowed |
+| **Uploads** | Cloudinary | No direct FS access, CDN delivery |
+
 ## Author
 
 **Dushyant**

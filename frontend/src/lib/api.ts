@@ -50,6 +50,12 @@ export const connectionsApi = {
   getStatus: (userId: string) => api.get<{ status: string }>(`/connections/${userId}/status`),
   pendingRequests: () => api.get<ConnectionRequest[]>('/connections/me/requests'),
   myConnections: () => api.get('/connections/me'),
+  getIcebreaker: (userId: string) =>
+    api.get<{
+      greeting: string;
+      options: { tone: string; message: string }[];
+      sharedInterests: string[];
+    }>(`/connections/${userId}/icebreaker`),
 };
 
 // Messages
