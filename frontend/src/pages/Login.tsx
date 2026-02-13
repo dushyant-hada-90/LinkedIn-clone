@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useSession } from '../context/SessionContext';
@@ -16,6 +16,30 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const { refreshUser } = useSession();
   const navigate = useNavigate();
+
+  // Handle Google OAuth callback — extract access_token from URL hash
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash) return;
+    const params = new URLSearchParams(hash.substring(1));
+    const accessToken = params.get('access_token');
+    if (!accessToken) return;
+
+    // Clear the hash from the URL
+    window.history.replaceState(null, '', window.location.pathname);
+
+    setLoading(true);
+    authApi
+      .googleLogin(accessToken)
+      .then(async () => {
+        await refreshUser();
+        navigate('/');
+      })
+      .catch((err: any) => {
+        setError(err.response?.data?.message || 'Google login failed');
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
