@@ -1,128 +1,147 @@
-# LinkedIn Clone (Full-Stack MERN)
+# Vibe — Modern Social Networking Platform
 
-A full-stack LinkedIn-like social networking application built to practice real-world backend architecture, authentication, and scalable React UI patterns. This project focuses on **clean separation of concerns**, **industry-standard folder structure**, and **production-style workflows**.
-
----
-
-## Purpose
-
-This repository is a learning-driven but production-oriented project intended to:
-- Design and implement a real-world social networking backend using Node.js and Express.
-- Build a modular, scalable React frontend with clear page/component separation.
-- Practice authentication, media handling, and user-to-user interactions similar to LinkedIn.
-- Demonstrate architectural decisions clearly for reviewers and interviewers.
+A full-stack social networking application built with **NestJS**, **React 19**, **TypeScript**, and **MongoDB**. Features real-time messaging, a rich profile system, connection management, and a beautiful dark/light theme.
 
 ---
+
+## Features
+
+- **Authentication** — Email/password signup & login with JWT (httpOnly cookies), Google OAuth
+- **Rich Profiles** — Cover image, avatar, headline, location, skills, experience, education with inline editing
+- **Posts & Feed** — Create posts with images (Cloudinary), like, comment (add/edit/delete), infinite scroll
+- **Connections** — Send/accept/reject/remove connection requests with real-time notifications
+- **Direct Messaging** — Full chat UI with Socket.io, typing indicators, read receipts, conversation list
+- **Real-Time Notifications** — Likes, comments, connection requests, messages delivered instantly
+- **Dark/Light Theme** — Teal + Warm Gray palette with smooth toggle and system preference detection
+- **Responsive Design** — Mobile-first layouts across all pages
 
 ## Tech Stack
 
-### Frontend
-- React (Vite)
-- Context API for global state management
-- Axios for API communication
-- CSS for styling
-
 ### Backend
-- Node.js
-- Express.js
-- MongoDB with Mongoose
-- JWT-based authentication
-- Cloudinary for image/media storage
-- Multer for file uploads
+- **NestJS 11** — Modular architecture with decorators & guards
+- **Mongoose 9** — MongoDB ODM with TypeScript schemas
+- **Socket.io** — WebSocket gateway for real-time features
+- **Passport JWT** — Authentication with access/refresh token rotation
+- **Cloudinary** — Image upload & management
+- **class-validator** — DTO validation
 
----
+### Frontend
+- **React 19** + **TypeScript** — Modern component architecture
+- **Vite 7** — Lightning-fast dev server & builds
+- **Tailwind CSS v4** — Utility-first styling with CSS variable theming
+- **Radix UI** — Accessible primitives (Dialog, DropdownMenu, Tabs, etc.)
+- **lucide-react** — Beautiful consistent icons
+- **Socket.io Client** — Real-time communication
+- **Axios** — HTTP client with credentials
+- **date-fns** — Date formatting
 
-## Architecture Overview
+## Project Structure
 
-The project follows a **frontend–backend separation** with a clear, maintainable structure.
-
-### Backend Architecture
-
-- `models/` — Mongoose schemas (User, Post, Connection)
-- `controllers/` — Business logic isolated from routing
-- `routes/` — Thin routing layer mapping endpoints to controllers
-- `middlewares/` — Authentication and file-upload middleware
-- `config/` — Database connection, JWT helpers, Cloudinary setup
-
-This structure ensures the backend remains modular, testable, and easy to extend.
-
-### Frontend Architecture
-
-- `pages/` — Route-level components (Home, Profile, Network, Login, Signup)
-- `components/` — Reusable UI components
-- `context/` — Global state (authentication and user data)
-- `assets/` — Static images and icons
-
-The frontend uses a **page-driven architecture** with centralized global state to avoid excessive prop drilling.
-
----
-
-## Key Features
-
-- User authentication with JWT and protected routes
-- User profile creation and editing
-- Post creation with image uploads
-- Connection requests (send / accept / reject)
-- Persistent login using cookies
-- Modular backend and scalable frontend structure
-
----
+```
+├── backend/
+│   └── src/
+│       ├── main.ts                  # Entry point
+│       ├── app.module.ts            # Root module
+│       ├── common/                  # Decorators & guards
+│       ├── gateways/                # Socket.io WebSocket gateway
+│       ├── modules/
+│       │   ├── auth/                # Login, signup, Google OAuth, JWT
+│       │   ├── users/               # Profile CRUD, search
+│       │   ├── posts/               # Feed, likes, comments
+│       │   ├── connections/         # Connection requests
+│       │   ├── messages/            # Conversations & DMs
+│       │   └── notifications/       # In-app notifications
+│       └── providers/
+│           └── cloudinary/          # Image upload service
+│
+├── frontend/
+│   └── src/
+│       ├── main.tsx                 # Entry with providers
+│       ├── App.tsx                  # Routes & protected layout
+│       ├── context/                 # Session, Theme, Socket providers
+│       ├── components/
+│       │   ├── layout/              # NavBar, Spinner
+│       │   ├── feed/                # PostComposer, PostCard, CommentSection
+│       │   └── ui/                  # Button, Card, Dialog, Avatar, etc.
+│       ├── pages/                   # Feed, Profile, Network, Messages, Login, Signup
+│       ├── hooks/                   # useInfiniteScroll
+│       ├── lib/                     # API modules, utilities
+│       └── types.ts                 # Shared TypeScript interfaces
+```
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v18+ recommended)
-- MongoDB (local or cloud)
-- Cloudinary account (for media uploads)
+- Node.js 18+
+- MongoDB Atlas cluster (or local MongoDB)
+- Cloudinary account (for image uploads)
+- Google OAuth Client ID (for social login)
 
-### Installation
+### Backend Setup
 
-1. Clone the repository
-```bash
-git clone <repo-url>
-```
-
-2. Install backend dependencies
 ```bash
 cd backend
 npm install
 ```
 
-3. Install frontend dependencies
+Create a `.env` file:
+
+```env
+MONGODB_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/vibe
+JWT_SECRET=your_jwt_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+GOOGLE_CLIENT_ID=your_google_client_id
+
+FRONTEND_URL=http://localhost:5173
+PORT=5000
+```
+
 ```bash
-cd ../frontend
+npm run dev    # Start with ts-node-dev (hot reload)
+npm run build  # Compile TypeScript
+npm start      # Run compiled JS
+```
+
+### Frontend Setup
+
+```bash
+cd frontend
 npm install
 ```
 
-4. Configure environment variables
-- Create a `.env` file in both `backend/` and `frontend/` as required
-- Never commit secrets to version control
+Create a `.env` file:
 
-5. Run the application
-```bash
-# backend
-npm run dev
-
-# frontend
-npm run dev
+```env
+VITE_API_URL=http://localhost:5000
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
 ```
 
+```bash
+npm run dev    # Start Vite dev server
+npm run build  # Production build
+```
+
+### Access
+
+- Frontend: [http://localhost:5173](http://localhost:5173)
+- Backend API: [http://localhost:5000](http://localhost:5000)
+
+## Design
+
+- **Color Palette**: Teal primary (#0D9488) with warm gray neutrals
+- **Dark Mode**: Full dark theme with smooth transitions
+- **Typography**: System font stack for performance
+- **Animations**: Fade-in, slide-up, scale-in transitions throughout
+
+## Author
+
+**Dushyant**
+
 ---
 
-## Project Status
-
-This project is under active development and is primarily intended for **learning, experimentation, and portfolio demonstration**.
-
----
-
-## Security Notes
-
-- Do not commit `.env` files or credentials
-- Follow best practices for authentication and API security
-- Rate-limiting and validation should be added before production use
-
----
-
-## Contact
-
-For questions, feedback, or improvements, feel free to open an issue or reach out to the repository maintainer.
+> Built with modern web technologies. Designed for a great developer experience and a polished user interface.
